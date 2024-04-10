@@ -1,4 +1,6 @@
-const BASE_URL = 'http://localhost:3000/films'
+// const { type } = require("server/reply")
+
+const BASE_URL = 'http://localhost:3000'
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchmovies()
@@ -13,23 +15,51 @@ fetch('http://localhost:3000/films',{
         'Content-Type': 'application/json'
     }
 })
-    .then((res) => res.json())
-    .then((movies) => {
-    movies.forEach(movie => { 
-        showMovie(movie)
-        
-      
+.then((res) => {
+   
+    return res.json();
+})
+.then((movies) => {
+    movies.forEach(movie => {
+        showMovie(movie);
     });
     })
     .catch((err) => console.log(err))
 
     
+}function updatePage(movie){
+    fetch(`http://localhost:3000/films`,{
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(movie)
+    })
+    .then((res) => {return res.json()})
+    .then((movie)=> {
+        console.log(movie)
+    })
+}
+
+function newTicket(movie){
+    fetch('http://localhost:3000/films',{
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(movie.id)
+    })
+    .then(res => res.json())
+    .then(movie =>
+        movie.tickets_sold++
+            )
+
 }
 
 function navigation(){
 const navig = document.querySelector('#heading')
 const parentDiv = document.createElement('div')
-parentDiv.classList.add('item')
+parentDiv.className = 'item'
 
 const head = document.createElement('h2')
 head.className = 'ui header'
@@ -44,7 +74,7 @@ titleText.innerText = 'FLATIDINGO'
 const subTtl = document.createElement('div')
 subTtl.id = 'subtitle'
 subTtl.className = 'sub header'
-subTtl.innerText = 'BUT MOVIES HERE'
+subTtl.innerText = 'BUY MOVIES HERE'
 
 
 head.append(icon, titleText, subTtl)
@@ -56,9 +86,7 @@ navig.appendChild(parentDiv)
 function showMovie(movie){
    
 
-    // const sideMenu = document.querySelector('#columns')
-    // sideMenu.className = 'ui centered grid'
-
+   
     const colmns = document.querySelector('#columns')
     colmns.className = 'four wide column'
 
@@ -79,6 +107,10 @@ function showMovie(movie){
    
 
    
+    
+    movieList.addEventListener("click", () => {
+        generatePosters()
+    })
     function generatePosters(){
         const posterDiv = document.querySelector('#imagediv')
         posterDiv.className = 'four wide column'
@@ -110,12 +142,38 @@ function showMovie(movie){
 
         const descript = document.createElement('div')
         descript.className = 'description'
-        
 
+        const info = document.querySelector('#film-info')
+        info.innerText = movie.description
+
+        const sTime = document.querySelector('#showtime')
+        sTime.className = 'ui label'
+        sTime.innerText = movie.showtime
+
+        const tRem = document.querySelector('#ticket-num')
+        tRem.innerText = `${movie.capacity - movie.tickets_sold} remaining tickets`
+
+        const xContent = document.createElement('div')
+        xContent.className = 'extra content'
+
+        let purchaseTicket = document.querySelector('#buy-ticket')
+        purchaseTicket.className = 'ui orange button'
+        purchaseTicket.innerText = 'BUY TICKET'
+        purchaseTicket.addEventListener("click", () => {
+             updatePage(movie)
+            newTicket(movie)
+            movie.tickets_sold++
+            let slotsRem = movie.capacity - movie.tickets_sold
+            tRem.innerText = `${slotsRem} remaining tickets`
+          
+        })
+       
+       
     }
-    movieList.addEventListener("click", () => {
-        generatePosters()
-    })
+
+
+     
+   
 }
 
-
+            
