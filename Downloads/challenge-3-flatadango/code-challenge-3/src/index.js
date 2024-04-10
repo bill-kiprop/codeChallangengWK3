@@ -47,7 +47,7 @@ function newTicket(movie){
         headers:{
             'Content-Type': 'application/json'
         },
-        body:JSON.stringify(movie.id)
+        body:JSON.stringify(movie.tickets_sold )
     })
     .then(res => res.json())
     .then(movie =>
@@ -165,7 +165,6 @@ function showMovie(movie){
             movie.tickets_sold++
             let slotsRem = movie.capacity - movie.tickets_sold
             tRem.innerText = `${slotsRem} remaining tickets`
-          
         })
        
        
