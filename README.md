@@ -12,6 +12,11 @@ Use this gif as an example of how the app should work.
 
 > To view in VSCode, right click on the README.md file and select "Open Preview".
 
+## live website
+
+follow the link [here](https://bill-kiprop.github.io/codeChallangengWK3/) to visit the live web version
+
+
 ## Setup
 
 Run this command to get the backend started:
